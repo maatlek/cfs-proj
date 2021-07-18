@@ -1,0 +1,1461 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "replicationVaultSettings_default_migrationSolutionId": {
+            "type": "SecureString"
+        },
+        "loadBalancers_sea_lb_name": {
+            "defaultValue": "sea-lb",
+            "type": "String"
+        },
+        "virtualNetworks_sea_vnet_name": {
+            "defaultValue": "sea-vnet",
+            "type": "String"
+        },
+        "actionGroups_web_cpu_act_name": {
+            "defaultValue": "web-cpu-act",
+            "type": "String"
+        },
+        "virtualMachines_jumpserver_name": {
+            "defaultValue": "jumpserver",
+            "type": "String"
+        },
+        "virtualMachines_webserver1_name": {
+            "defaultValue": "webserver1",
+            "type": "String"
+        },
+        "virtualMachines_webserver11_name": {
+            "defaultValue": "webserver11",
+            "type": "String"
+        },
+        "publicIPAddresses_sea_lb_ip_name": {
+            "defaultValue": "sea-lb-ip",
+            "type": "String"
+        },
+        "storageAccounts_nilsestorage_name": {
+            "defaultValue": "nilsestorage",
+            "type": "String"
+        },
+        "networkSecurityGroups_sea_nsg_name": {
+            "defaultValue": "sea-nsg",
+            "type": "String"
+        },
+        "vaults_sea_web_bckup_name": {
+            "defaultValue": "sea-web-bckup",
+            "type": "String"
+        },
+        "networkInterfaces_jumpserver264_name": {
+            "defaultValue": "jumpserver264",
+            "type": "String"
+        },
+        "networkInterfaces_webserver1914_name": {
+            "defaultValue": "webserver1914",
+            "type": "String"
+        },
+        "publicIPAddresses_jumpserver_ip_name": {
+            "defaultValue": "jumpserver-ip",
+            "type": "String"
+        },
+        "metricAlerts_webserver_CPU_High_name": {
+            "defaultValue": "webserver-CPU-High",
+            "type": "String"
+        },
+        "networkInterfaces_webserver11402_name": {
+            "defaultValue": "webserver11402",
+            "type": "String"
+        },
+        "trafficManagerProfiles_nilavembu_name": {
+            "defaultValue": "nilavembu",
+            "type": "String"
+        },
+        "availabilitySets_sea_availabilityset_name": {
+            "defaultValue": "sea-availabilityset",
+            "type": "String"
+        },
+        "applicationSecurityGroups_sea_web_asg_name": {
+            "defaultValue": "sea-web-asg",
+            "type": "String"
+        },
+        "applicationSecurityGroups_sea_jump_asg_name": {
+            "defaultValue": "sea-jump-asg",
+            "type": "String"
+        },
+        "publicIPAddresses_server11_ip_externalid": {
+            "defaultValue": "/subscriptions/7e970a5a-ab04-4b97-bc65-0b1e079a1ad9/resourceGroups/Nilavembu_EUS/providers/Microsoft.Network/publicIPAddresses/server11-ip",
+            "type": "String"
+        },
+        "virtualNetworks_eus_vnet_externalid": {
+            "defaultValue": "/subscriptions/7e970a5a-ab04-4b97-bc65-0b1e079a1ad9/resourceGroups/Nilavembu_EUS/providers/Microsoft.Network/virtualNetworks/eus-vnet",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "microsoft.insights/actionGroups",
+            "apiVersion": "2019-06-01",
+            "name": "[parameters('actionGroups_web_cpu_act_name')]",
+            "location": "Global",
+            "tags": {
+                "Application": "Web"
+            },
+            "properties": {
+                "groupShortName": "[parameters('actionGroups_web_cpu_act_name')]",
+                "enabled": true,
+                "emailReceivers": [],
+                "smsReceivers": [
+                    {
+                        "name": "SMS Alert_-SMSAction-",
+                        "countryCode": "91",
+                        "phoneNumber": "6379070771"
+                    }
+                ],
+                "webhookReceivers": [],
+                "itsmReceivers": [],
+                "azureAppPushReceivers": [],
+                "automationRunbookReceivers": [],
+                "voiceReceivers": [],
+                "logicAppReceivers": [],
+                "azureFunctionReceivers": [],
+                "armRoleReceivers": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/applicationSecurityGroups",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('applicationSecurityGroups_sea_jump_asg_name')]",
+            "location": "australiaeast",
+            "tags": {
+                "Business_Name": "Nilavembu",
+                "Application": "Jump",
+                "Region": "SEA"
+            },
+            "properties": {
+                "provisioningState": "Succeeded"
+            }
+        },
+        {
+            "type": "Microsoft.Network/applicationSecurityGroups",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('applicationSecurityGroups_sea_web_asg_name')]",
+            "location": "australiaeast",
+            "tags": {
+                "Application": "Web",
+                "Business_Name": "Nilavembu",
+                "Region": "SEA"
+            },
+            "properties": {
+                "provisioningState": "Succeeded"
+            }
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('publicIPAddresses_jumpserver_ip_name')]",
+            "location": "australiaeast",
+            "tags": {
+                "Application": "Jump",
+                "Business_Name": "Nilavembu",
+                "Region": "SEA"
+            },
+            "sku": {
+                "name": "Basic",
+                "tier": "Regional"
+            },
+            "properties": {
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4,
+                "dnsSettings": {
+                    "domainNameLabel": "jumpnil",
+                    "fqdn": "jumpnil.australiaeast.cloudapp.azure.com"
+                },
+                "ipTags": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('publicIPAddresses_sea_lb_ip_name')]",
+            "location": "australiaeast",
+            "tags": {
+                "Business_Name": "Nilavembu",
+                "Region": "SEA"
+            },
+            "sku": {
+                "name": "Basic",
+                "tier": "Regional"
+            },
+            "properties": {
+                "ipAddress": "20.58.174.109",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Static",
+                "idleTimeoutInMinutes": 4,
+                "dnsSettings": {
+                    "domainNameLabel": "nilavembu",
+                    "fqdn": "nilavembu.australiaeast.cloudapp.azure.com"
+                },
+                "ipTags": []
+            }
+        },
+        {
+            "type": "Microsoft.RecoveryServices/vaults",
+            "apiVersion": "2021-03-01",
+            "name": "[parameters('vaults_sea_web_bckup_name')]",
+            "location": "australiaeast",
+            "tags": {
+                "Business_Name": "Nilavembu",
+                "Region": "SEA",
+                "Application": "Web"
+            },
+            "sku": {
+                "name": "RS0",
+                "tier": "Standard"
+            },
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2021-03-01",
+            "name": "[parameters('virtualMachines_jumpserver_name')]",
+            "location": "australiaeast",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_jumpserver264_name'))]"
+            ],
+            "tags": {
+                "Application": "Jump",
+                "Business_Name": "Nilavembu",
+                "Region": "SEA"
+            },
+            "identity": {
+                "principalId": "f721b710-92f7-4dfe-b00b-505df1b085a9",
+                "tenantId": "a61df84b-b3a7-44de-8393-3ff016b121de",
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS1_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2019-Datacenter",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "name": "[concat(parameters('virtualMachines_jumpserver_name'), '_disk1_f81975356953465b97779a5cf93ca537')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_jumpserver_name'), '_disk1_f81975356953465b97779a5cf93ca537'))]"
+                        }
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_jumpserver_name')]",
+                    "adminUsername": "mkadmin",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true,
+                        "patchSettings": {
+                            "patchMode": "AutomaticByOS",
+                            "assessmentMode": "ImageDefault",
+                            "enableHotpatching": false
+                        }
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_jumpserver264_name'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/loadBalancers/backendAddressPools",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('loadBalancers_sea_lb_name'), '/', parameters('loadBalancers_sea_lb_name'), 'bp')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_sea_lb_name'))]"
+            ],
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('networkSecurityGroups_sea_nsg_name'), '/Allow_RDP')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]"
+            ],
+            "properties": {
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 110,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/trafficManagerProfiles",
+            "apiVersion": "2018-04-01",
+            "name": "[parameters('trafficManagerProfiles_nilavembu_name')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_sea_lb_ip_name'))]"
+            ],
+            "properties": {
+                "profileStatus": "Enabled",
+                "trafficRoutingMethod": "Geographic",
+                "dnsConfig": {
+                    "relativeName": "[parameters('trafficManagerProfiles_nilavembu_name')]",
+                    "ttl": 60
+                },
+                "monitorConfig": {
+                    "profileMonitorStatus": "Degraded",
+                    "protocol": "HTTP",
+                    "port": 80,
+                    "path": "/",
+                    "intervalInSeconds": 30,
+                    "toleratedNumberOfFailures": 3,
+                    "timeoutInSeconds": 10
+                },
+                "endpoints": [
+                    {
+                        "id": "[concat(resourceId('Microsoft.Network/trafficManagerProfiles', parameters('trafficManagerProfiles_nilavembu_name')), '/azureEndpoints/sea-region')]",
+                        "name": "sea-region",
+                        "type": "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
+                        "properties": {
+                            "endpointStatus": "Enabled",
+                            "endpointMonitorStatus": "Degraded",
+                            "targetResourceId": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_sea_lb_ip_name'))]",
+                            "target": "[concat(parameters('trafficManagerProfiles_nilavembu_name'), '.australiaeast.cloudapp.azure.com')]",
+                            "weight": 1,
+                            "priority": 1,
+                            "endpointLocation": "Australia East",
+                            "geoMapping": [
+                                "GEO-AS"
+                            ]
+                        }
+                    },
+                    {
+                        "id": "[concat(resourceId('Microsoft.Network/trafficManagerProfiles', parameters('trafficManagerProfiles_nilavembu_name')), '/azureEndpoints/eus-region')]",
+                        "name": "eus-region",
+                        "type": "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
+                        "properties": {
+                            "endpointStatus": "Enabled",
+                            "endpointMonitorStatus": "Degraded",
+                            "targetResourceId": "[parameters('publicIPAddresses_server11_ip_externalid')]",
+                            "target": "nilserver11.canadacentral.cloudapp.azure.com",
+                            "weight": 1,
+                            "priority": 2,
+                            "endpointLocation": "Canada Central",
+                            "geoMapping": [
+                                "GEO-NA"
+                            ]
+                        }
+                    }
+                ],
+                "trafficViewEnrollmentStatus": "Disabled",
+                "maxReturn": 0
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('virtualNetworks_sea_vnet_name')]",
+            "location": "australiaeast",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]"
+            ],
+            "tags": {
+                "Business_Name": "Nilavembu",
+                "Region": "SEA"
+            },
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/8"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "sea-jump-subnet",
+                        "properties": {
+                            "addressPrefix": "10.2.0.0/24",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]"
+                            },
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "australiaeast",
+                                        "australiasoutheast"
+                                    ]
+                                }
+                            ],
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Disabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    },
+                    {
+                        "name": "sea-web-subnet",
+                        "properties": {
+                            "addressPrefix": "10.1.0.0/24",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]"
+                            },
+                            "serviceEndpoints": [
+                                {
+                                    "service": "Microsoft.Storage",
+                                    "locations": [
+                                        "australiaeast",
+                                        "australiasoutheast"
+                                    ]
+                                }
+                            ],
+                            "delegations": [],
+                            "privateEndpointNetworkPolicies": "Enabled",
+                            "privateLinkServiceNetworkPolicies": "Enabled"
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": [
+                    {
+                        "name": "sea-eus",
+                        "properties": {
+                            "peeringState": "Connected",
+                            "remoteVirtualNetwork": {
+                                "id": "[parameters('virtualNetworks_eus_vnet_externalid')]"
+                            },
+                            "allowVirtualNetworkAccess": true,
+                            "allowForwardedTraffic": true,
+                            "allowGatewayTransit": false,
+                            "useRemoteGateways": false,
+                            "remoteAddressSpace": {
+                                "addressPrefixes": [
+                                    "192.168.0.0/16"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "enableDdosProtection": false
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('virtualNetworks_sea_vnet_name'), '/sea-eus')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_sea_vnet_name'))]"
+            ],
+            "properties": {
+                "peeringState": "Connected",
+                "remoteVirtualNetwork": {
+                    "id": "[parameters('virtualNetworks_eus_vnet_externalid')]"
+                },
+                "allowVirtualNetworkAccess": true,
+                "allowForwardedTraffic": true,
+                "allowGatewayTransit": false,
+                "useRemoteGateways": false,
+                "remoteAddressSpace": {
+                    "addressPrefixes": [
+                        "192.168.0.0/16"
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.RecoveryServices/vaults/backupPolicies",
+            "apiVersion": "2021-03-01",
+            "name": "[concat(parameters('vaults_sea_web_bckup_name'), '/DefaultPolicy')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults', parameters('vaults_sea_web_bckup_name'))]"
+            ],
+            "properties": {
+                "backupManagementType": "AzureIaasVM",
+                "instantRPDetails": {},
+                "schedulePolicy": {
+                    "schedulePolicyType": "SimpleSchedulePolicy",
+                    "scheduleRunFrequency": "Daily",
+                    "scheduleRunTimes": [
+                        "2021-07-16T04:00:00Z"
+                    ],
+                    "scheduleWeeklyFrequency": 0
+                },
+                "retentionPolicy": {
+                    "retentionPolicyType": "LongTermRetentionPolicy",
+                    "dailySchedule": {
+                        "retentionTimes": [
+                            "2021-07-16T04:00:00Z"
+                        ],
+                        "retentionDuration": {
+                            "count": 30,
+                            "durationType": "Days"
+                        }
+                    }
+                },
+                "instantRpRetentionRangeInDays": 2,
+                "timeZone": "UTC",
+                "protectedItemsCount": 0
+            }
+        },
+        {
+            "type": "Microsoft.RecoveryServices/vaults/backupPolicies",
+            "apiVersion": "2021-03-01",
+            "name": "[concat(parameters('vaults_sea_web_bckup_name'), '/HourlyLogBackup')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults', parameters('vaults_sea_web_bckup_name'))]"
+            ],
+            "properties": {
+                "backupManagementType": "AzureWorkload",
+                "workLoadType": "SQLDataBase",
+                "settings": {
+                    "timeZone": "UTC",
+                    "issqlcompression": false,
+                    "isCompression": false
+                },
+                "subProtectionPolicy": [
+                    {
+                        "policyType": "Full",
+                        "schedulePolicy": {
+                            "schedulePolicyType": "SimpleSchedulePolicy",
+                            "scheduleRunFrequency": "Daily",
+                            "scheduleRunTimes": [
+                                "2021-07-16T04:00:00Z"
+                            ],
+                            "scheduleWeeklyFrequency": 0
+                        },
+                        "retentionPolicy": {
+                            "retentionPolicyType": "LongTermRetentionPolicy",
+                            "dailySchedule": {
+                                "retentionTimes": [
+                                    "2021-07-16T04:00:00Z"
+                                ],
+                                "retentionDuration": {
+                                    "count": 30,
+                                    "durationType": "Days"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "policyType": "Log",
+                        "schedulePolicy": {
+                            "schedulePolicyType": "LogSchedulePolicy",
+                            "scheduleFrequencyInMins": 60
+                        },
+                        "retentionPolicy": {
+                            "retentionPolicyType": "SimpleRetentionPolicy",
+                            "retentionDuration": {
+                                "count": 30,
+                                "durationType": "Days"
+                            }
+                        }
+                    }
+                ],
+                "protectedItemsCount": 0
+            }
+        },
+        {
+            "type": "Microsoft.RecoveryServices/vaults/backupPolicies",
+            "apiVersion": "2021-03-01",
+            "name": "[concat(parameters('vaults_sea_web_bckup_name'), '/weekbckup')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults', parameters('vaults_sea_web_bckup_name'))]"
+            ],
+            "properties": {
+                "backupManagementType": "AzureIaasVM",
+                "instantRPDetails": {},
+                "schedulePolicy": {
+                    "schedulePolicyType": "SimpleSchedulePolicy",
+                    "scheduleRunFrequency": "Weekly",
+                    "scheduleRunDays": [
+                        "Sunday"
+                    ],
+                    "scheduleRunTimes": [
+                        "2021-07-15T01:30:00Z"
+                    ],
+                    "scheduleWeeklyFrequency": 0
+                },
+                "retentionPolicy": {
+                    "retentionPolicyType": "LongTermRetentionPolicy",
+                    "weeklySchedule": {
+                        "daysOfTheWeek": [
+                            "Sunday"
+                        ],
+                        "retentionTimes": [
+                            "2021-07-15T01:30:00Z"
+                        ],
+                        "retentionDuration": {
+                            "count": 3,
+                            "durationType": "Weeks"
+                        }
+                    }
+                },
+                "instantRpRetentionRangeInDays": 5,
+                "timeZone": "UTC",
+                "protectedItemsCount": 0
+            }
+        },
+        {
+            "type": "Microsoft.RecoveryServices/vaults/replicationAlertSettings",
+            "apiVersion": "2021-03-01",
+            "name": "[concat(parameters('vaults_sea_web_bckup_name'), '/defaultAlertSetting')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults', parameters('vaults_sea_web_bckup_name'))]"
+            ],
+            "properties": {
+                "sendToOwners": "DoNotSend",
+                "customEmailAddresses": []
+            }
+        },
+        {
+            "type": "Microsoft.RecoveryServices/vaults/replicationVaultSettings",
+            "apiVersion": "2021-03-01",
+            "name": "[concat(parameters('vaults_sea_web_bckup_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.RecoveryServices/vaults', parameters('vaults_sea_web_bckup_name'))]"
+            ],
+            "properties": {
+                "migrationSolutionId": "[parameters('replicationVaultSettings_default_migrationSolutionId')]"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2021-04-01",
+            "name": "[concat(parameters('storageAccounts_nilsestorage_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_nilsestorage_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_ZRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "enabled": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2021-04-01",
+            "name": "[concat(parameters('storageAccounts_nilsestorage_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_nilsestorage_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_ZRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "protocolSettings": {
+                    "smb": {}
+                },
+                "cors": {
+                    "corsRules": []
+                },
+                "shareDeleteRetentionPolicy": {
+                    "enabled": false,
+                    "days": 0
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices",
+            "apiVersion": "2021-04-01",
+            "name": "[concat(parameters('storageAccounts_nilsestorage_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_nilsestorage_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices",
+            "apiVersion": "2021-04-01",
+            "name": "[concat(parameters('storageAccounts_nilsestorage_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_nilsestorage_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/availabilitySets",
+            "apiVersion": "2021-03-01",
+            "name": "[parameters('availabilitySets_sea_availabilityset_name')]",
+            "location": "australiaeast",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_webserver1_name'))]",
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_webserver11_name'))]"
+            ],
+            "tags": {
+                "Business_Name": "Nilavembu",
+                "Region": "SEA"
+            },
+            "sku": {
+                "name": "Aligned"
+            },
+            "properties": {
+                "platformUpdateDomainCount": 1,
+                "platformFaultDomainCount": 2,
+                "virtualMachines": [
+                    {
+                        "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_webserver1_name'))]"
+                    },
+                    {
+                        "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_webserver11_name'))]"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2021-03-01",
+            "name": "[parameters('virtualMachines_webserver1_name')]",
+            "location": "australiaeast",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_sea_availabilityset_name'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_webserver1914_name'))]"
+            ],
+            "tags": {
+                "Application": "Web",
+                "Business_Name": "Nilavembu",
+                "Region": "SEA"
+            },
+            "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_sea_availabilityset_name'))]"
+                },
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS1_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2019-Datacenter",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "name": "[concat(parameters('virtualMachines_webserver1_name'), '_OsDisk_1_9ad018ac66144dcabf269df211c6c4c9')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_webserver1_name'), '_OsDisk_1_9ad018ac66144dcabf269df211c6c4c9'))]"
+                        }
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_webserver1_name')]",
+                    "adminUsername": "mkadmin",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true,
+                        "patchSettings": {
+                            "patchMode": "AutomaticByOS",
+                            "assessmentMode": "ImageDefault",
+                            "enableHotpatching": false
+                        }
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_webserver1914_name'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2021-03-01",
+            "name": "[parameters('virtualMachines_webserver11_name')]",
+            "location": "australiaeast",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_sea_availabilityset_name'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_webserver11402_name'))]"
+            ],
+            "tags": {
+                "Application": "Web",
+                "Business_Name": "Nilavembu",
+                "Region": "SEA"
+            },
+            "properties": {
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySets_sea_availabilityset_name'))]"
+                },
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS1_v2"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2019-Datacenter",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "name": "[concat(parameters('virtualMachines_webserver11_name'), '_OsDisk_1_3ff75f034c5649d09dee29e6056b021a')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('virtualMachines_webserver11_name'), '_OsDisk_1_3ff75f034c5649d09dee29e6056b021a'))]"
+                        }
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_webserver11_name')]",
+                    "adminUsername": "mkadmin",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true,
+                        "patchSettings": {
+                            "patchMode": "AutomaticByOS",
+                            "assessmentMode": "ImageDefault",
+                            "enableHotpatching": false
+                        }
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_webserver11402_name'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/loadBalancers",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('loadBalancers_sea_lb_name')]",
+            "location": "australiaeast",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_sea_lb_ip_name'))]",
+                "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_sea_lb_name'), concat(parameters('loadBalancers_sea_lb_name'), 'bp'))]"
+            ],
+            "tags": {
+                "Business_Name": "Nilavembu",
+                "Region": "SEA"
+            },
+            "sku": {
+                "name": "Basic",
+                "tier": "Regional"
+            },
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_sea_lb_ip_name'))]"
+                            }
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name": "[concat(parameters('loadBalancers_sea_lb_name'), 'bp')]",
+                        "properties": {}
+                    }
+                ],
+                "loadBalancingRules": [
+                    {
+                        "name": "Allow_HTTP",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_sea_lb_name')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
+                            },
+                            "frontendPort": 80,
+                            "backendPort": 80,
+                            "enableFloatingIP": false,
+                            "idleTimeoutInMinutes": 4,
+                            "protocol": "Tcp",
+                            "enableTcpReset": false,
+                            "loadDistribution": "SourceIPProtocol",
+                            "backendAddressPool": {
+                                "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_sea_lb_name'), concat(parameters('loadBalancers_sea_lb_name'), 'bp'))]"
+                            },
+                            "probe": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_sea_lb_name')), '/probes/webserver-health')]"
+                            }
+                        }
+                    },
+                    {
+                        "name": "Allow_HTTPS",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_sea_lb_name')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
+                            },
+                            "frontendPort": 443,
+                            "backendPort": 443,
+                            "enableFloatingIP": false,
+                            "idleTimeoutInMinutes": 4,
+                            "protocol": "Tcp",
+                            "enableTcpReset": false,
+                            "loadDistribution": "SourceIPProtocol",
+                            "backendAddressPool": {
+                                "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_sea_lb_name'), concat(parameters('loadBalancers_sea_lb_name'), 'bp'))]"
+                            },
+                            "probe": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_sea_lb_name')), '/probes/webserver-health-s')]"
+                            }
+                        }
+                    }
+                ],
+                "probes": [
+                    {
+                        "name": "webserver-health",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "port": 80,
+                            "intervalInSeconds": 5,
+                            "numberOfProbes": 5
+                        }
+                    },
+                    {
+                        "name": "webserver-health-s",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "port": 443,
+                            "intervalInSeconds": 5,
+                            "numberOfProbes": 2
+                        }
+                    }
+                ],
+                "inboundNatRules": [],
+                "inboundNatPools": []
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('networkSecurityGroups_sea_nsg_name')]",
+            "location": "australiaeast",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/applicationSecurityGroups', parameters('applicationSecurityGroups_sea_jump_asg_name'))]",
+                "[resourceId('Microsoft.Network/applicationSecurityGroups', parameters('applicationSecurityGroups_sea_web_asg_name'))]"
+            ],
+            "tags": {
+                "Business_Name": "Nilavembu",
+                "Region": "SEA"
+            },
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "Allow_RDP",
+                        "properties": {
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 110,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "Allow_FTP",
+                        "properties": {
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "21",
+                            "access": "Allow",
+                            "priority": 120,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": [],
+                            "sourceApplicationSecurityGroups": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', parameters('applicationSecurityGroups_sea_jump_asg_name'))]"
+                                }
+                            ],
+                            "destinationApplicationSecurityGroups": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', parameters('applicationSecurityGroups_sea_web_asg_name'))]"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "Allow_HTTP_S",
+                        "properties": {
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Inbound",
+                            "sourcePortRanges": [],
+                            "destinationPortRanges": [
+                                "80",
+                                "443"
+                            ],
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": [],
+                            "destinationApplicationSecurityGroups": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', parameters('applicationSecurityGroups_sea_web_asg_name'))]"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('networkSecurityGroups_sea_nsg_name'), '/Allow_HTTP_S')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]",
+                "[resourceId('Microsoft.Network/applicationSecurityGroups', parameters('applicationSecurityGroups_sea_web_asg_name'))]"
+            ],
+            "properties": {
+                "protocol": "*",
+                "sourcePortRange": "*",
+                "sourceAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [
+                    "80",
+                    "443"
+                ],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "destinationApplicationSecurityGroups": [
+                    {
+                        "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', parameters('applicationSecurityGroups_sea_web_asg_name'))]"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('virtualNetworks_sea_vnet_name'), '/sea-jump-subnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_sea_vnet_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.2.0.0/24",
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.Storage",
+                        "locations": [
+                            "australiaeast",
+                            "australiasoutheast"
+                        ]
+                    }
+                ],
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('virtualNetworks_sea_vnet_name'), '/sea-web-subnet')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_sea_vnet_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]"
+            ],
+            "properties": {
+                "addressPrefix": "10.1.0.0/24",
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.Storage",
+                        "locations": [
+                            "australiaeast",
+                            "australiasoutheast"
+                        ]
+                    }
+                ],
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Enabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-04-01",
+            "name": "[parameters('storageAccounts_nilsestorage_name')]",
+            "location": "australiaeast",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_sea_vnet_name'), 'sea-jump-subnet')]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_sea_vnet_name'), 'sea-web-subnet')]"
+            ],
+            "tags": {
+                "Business_Name": "Nilavembu",
+                "Region": "SEA"
+            },
+            "sku": {
+                "name": "Standard_ZRS",
+                "tier": "Standard"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "isNfsV3Enabled": true,
+                "minimumTlsVersion": "TLS1_2",
+                "allowBlobPublicAccess": true,
+                "allowSharedKeyAccess": true,
+                "largeFileSharesState": "Enabled",
+                "isHnsEnabled": true,
+                "networkAcls": {
+                    "resourceAccessRules": [],
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_sea_vnet_name'), 'sea-jump-subnet')]",
+                            "action": "Allow",
+                            "state": "Succeeded"
+                        },
+                        {
+                            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_sea_vnet_name'), 'sea-web-subnet')]",
+                            "action": "Allow",
+                            "state": "Succeeded"
+                        }
+                    ],
+                    "ipRules": [
+                        {
+                            "value": "103.163.248.242",
+                            "action": "Allow"
+                        }
+                    ],
+                    "defaultAction": "Deny"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "table": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "queue": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "accessTier": "Hot"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2021-04-01",
+            "name": "[concat(parameters('storageAccounts_nilsestorage_name'), '/default/sales')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_nilsestorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_nilsestorage_name'))]"
+            ],
+            "properties": {
+                "defaultEncryptionScope": "$account-encryption-key",
+                "denyEncryptionScopeOverride": false,
+                "publicAccess": "Container"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+            "apiVersion": "2021-04-01",
+            "name": "[concat(parameters('storageAccounts_nilsestorage_name'), '/default/sales-sea')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storageAccounts_nilsestorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_nilsestorage_name'))]"
+            ],
+            "properties": {
+                "accessTier": "TransactionOptimized",
+                "shareQuota": 2,
+                "enabledProtocols": "SMB"
+            }
+        },
+        {
+            "type": "microsoft.insights/metricAlerts",
+            "apiVersion": "2018-03-01",
+            "name": "[parameters('metricAlerts_webserver_CPU_High_name')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_webserver11_name'))]",
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_webserver1_name'))]",
+                "[resourceId('microsoft.insights/actionGroups', parameters('actionGroups_web_cpu_act_name'))]"
+            ],
+            "properties": {
+                "severity": 2,
+                "enabled": true,
+                "scopes": [
+                    "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_webserver11_name'))]",
+                    "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_webserver1_name'))]"
+                ],
+                "evaluationFrequency": "PT1M",
+                "windowSize": "PT5M",
+                "criteria": {
+                    "allOf": [
+                        {
+                            "threshold": 80,
+                            "name": "Metric1",
+                            "metricNamespace": "microsoft.compute/virtualmachines",
+                            "metricName": "Percentage CPU",
+                            "operator": "GreaterThan",
+                            "timeAggregation": "Average",
+                            "criterionType": "StaticThresholdCriterion"
+                        }
+                    ],
+                    "odata.type": "Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria"
+                },
+                "autoMitigate": true,
+                "targetResourceType": "Microsoft.Compute/virtualMachines",
+                "targetResourceRegion": "australiaeast",
+                "actions": [
+                    {
+                        "actionGroupId": "[resourceId('microsoft.insights/actionGroups', parameters('actionGroups_web_cpu_act_name'))]",
+                        "webHookProperties": {}
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('networkInterfaces_jumpserver264_name')]",
+            "location": "australiaeast",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_jumpserver_ip_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_sea_vnet_name'), 'sea-jump-subnet')]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]"
+            ],
+            "tags": {
+                "Application": "Jump",
+                "Business_Name": "Nilavembu",
+                "Region": "SEA"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.2.0.4",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_jumpserver_ip_name'))]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_sea_vnet_name'), 'sea-jump-subnet')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('networkSecurityGroups_sea_nsg_name'), '/Allow_FTP')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]",
+                "[resourceId('Microsoft.Network/applicationSecurityGroups', parameters('applicationSecurityGroups_sea_jump_asg_name'))]",
+                "[resourceId('Microsoft.Network/applicationSecurityGroups', parameters('applicationSecurityGroups_sea_web_asg_name'))]"
+            ],
+            "properties": {
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "21",
+                "access": "Allow",
+                "priority": 120,
+                "direction": "Inbound",
+                "sourcePortRanges": [],
+                "destinationPortRanges": [],
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": [],
+                "sourceApplicationSecurityGroups": [
+                    {
+                        "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', parameters('applicationSecurityGroups_sea_jump_asg_name'))]"
+                    }
+                ],
+                "destinationApplicationSecurityGroups": [
+                    {
+                        "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', parameters('applicationSecurityGroups_sea_web_asg_name'))]"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('networkInterfaces_webserver11402_name')]",
+            "location": "australiaeast",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_sea_vnet_name'), 'sea-web-subnet')]",
+                "[resourceId('Microsoft.Network/applicationSecurityGroups', parameters('applicationSecurityGroups_sea_web_asg_name'))]",
+                "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_sea_lb_name'), concat(parameters('loadBalancers_sea_lb_name'), 'bp'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]"
+            ],
+            "tags": {
+                "Application": "Web",
+                "Business_Name": "Nilavembu",
+                "Region": "SEA"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.1.0.5",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_sea_vnet_name'), 'sea-web-subnet')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4",
+                            "applicationSecurityGroups": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', parameters('applicationSecurityGroups_sea_web_asg_name'))]"
+                                }
+                            ],
+                            "loadBalancerBackendAddressPools": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_sea_lb_name'), concat(parameters('loadBalancers_sea_lb_name'), 'bp'))]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2020-11-01",
+            "name": "[parameters('networkInterfaces_webserver1914_name')]",
+            "location": "australiaeast",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_sea_vnet_name'), 'sea-web-subnet')]",
+                "[resourceId('Microsoft.Network/applicationSecurityGroups', parameters('applicationSecurityGroups_sea_web_asg_name'))]",
+                "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_sea_lb_name'), concat(parameters('loadBalancers_sea_lb_name'), 'bp'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]"
+            ],
+            "tags": {
+                "Application": "Web",
+                "Business_Name": "Nilavembu",
+                "Region": "SEA"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAddress": "10.1.0.4",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_sea_vnet_name'), 'sea-web-subnet')]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4",
+                            "applicationSecurityGroups": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/applicationSecurityGroups', parameters('applicationSecurityGroups_sea_web_asg_name'))]"
+                                }
+                            ],
+                            "loadBalancerBackendAddressPools": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_sea_lb_name'), concat(parameters('loadBalancers_sea_lb_name'), 'bp'))]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": []
+                },
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]"
+                }
+            }
+        }
+    ]
+}

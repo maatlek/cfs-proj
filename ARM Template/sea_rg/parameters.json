@@ -1,0 +1,72 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "replicationVaultSettings_default_migrationSolutionId": {
+            "value": null
+        },
+        "loadBalancers_sea_lb_name": {
+            "value": null
+        },
+        "virtualNetworks_sea_vnet_name": {
+            "value": null
+        },
+        "actionGroups_web_cpu_act_name": {
+            "value": null
+        },
+        "virtualMachines_jumpserver_name": {
+            "value": null
+        },
+        "virtualMachines_webserver1_name": {
+            "value": null
+        },
+        "virtualMachines_webserver11_name": {
+            "value": null
+        },
+        "publicIPAddresses_sea_lb_ip_name": {
+            "value": null
+        },
+        "storageAccounts_nilsestorage_name": {
+            "value": null
+        },
+        "networkSecurityGroups_sea_nsg_name": {
+            "value": null
+        },
+        "vaults_sea_web_bckup_name": {
+            "value": null
+        },
+        "networkInterfaces_jumpserver264_name": {
+            "value": null
+        },
+        "networkInterfaces_webserver1914_name": {
+            "value": null
+        },
+        "publicIPAddresses_jumpserver_ip_name": {
+            "value": null
+        },
+        "metricAlerts_webserver_CPU_High_name": {
+            "value": null
+        },
+        "networkInterfaces_webserver11402_name": {
+            "value": null
+        },
+        "trafficManagerProfiles_nilavembu_name": {
+            "value": null
+        },
+        "availabilitySets_sea_availabilityset_name": {
+            "value": null
+        },
+        "applicationSecurityGroups_sea_web_asg_name": {
+            "value": null
+        },
+        "applicationSecurityGroups_sea_jump_asg_name": {
+            "value": null
+        },
+        "publicIPAddresses_server11_ip_externalid": {
+            "value": null
+        },
+        "virtualNetworks_eus_vnet_externalid": {
+            "value": null
+        }
+    }
+}

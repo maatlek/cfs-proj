@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_server11_name": {
+            "value": null
+        },
+        "virtualNetworks_eus_vnet_name": {
+            "value": null
+        },
+        "storageAccounts_nileustorage_name": {
+            "value": null
+        },
+        "networkInterfaces_server11264_name": {
+            "value": null
+        },
+        "networkSecurityGroups_eus_nsg_name": {
+            "value": null
+        },
+        "publicIPAddresses_server11_ip_name": {
+            "value": null
+        },
+        "applicationSecurityGroups_eus_web_asg_name": {
+            "value": null
+        },
+        "virtualNetworks_sea_vnet_externalid": {
+            "value": null
+        }
+    }
+}
