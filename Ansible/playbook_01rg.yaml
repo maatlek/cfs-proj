@@ -1,0 +1,32 @@
+- name: Creating RG in SEA Region
+  hosts: localhost
+  connection: local
+  tasks:
+    # Creating a Resource Group
+  - name: Create resource group
+    azure_rm_resourcegroup:
+      name: mknilavembu_sea
+      location: australiaeast
+      tags:
+        business: nilavembu
+        region: southeastasia
+    register: rg
+  - name: Provide RG Details
+    debug:
+      msg: "The Resource Group {{ rg.state.name }} in the location {{ rg.state.location}}."
+- name: Creating RG in EUS Region
+  hosts: localhost
+  connection: local
+  tasks:  
+  # Creating a Resource Group
+  - name: Create resource group
+    azure_rm_resourcegroup:
+      name: mknilavembu_eus
+      location: canadacentral
+      tags:
+        business: nilavembu
+        region: eastus
+    register: rg
+  - name: Provide RG Details
+    debug:
+      msg: "The Resource Group {{ rg.state.name }} in the location {{ rg.state.location}}."

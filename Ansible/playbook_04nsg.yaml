@@ -1,0 +1,62 @@
+- name: Creating Network Security Group Resources in SEA Region
+  hosts: localhost
+  connection: local
+  tasks:
+  # Creating an Network Security Group
+  - name: Create Network Security Group that allows Web Traffic
+    azure_rm_securitygroup:
+      resource_group: mknilavembu_sea
+      name: sea_nsg
+      rules:
+      - name: Allow_HTTP_S
+        protocol: Tcp
+        destination_port_range:
+        - 80
+        - 443
+        destination_application_security_groups:
+        - sea_web_asg
+        access: Allow
+        priority: 1001
+        direction: Inbound
+      - name: Allow_FTP
+        protocol: Tcp
+        source_application_security_groups:
+        - sea_jump_asg
+        destination_port_range: 22
+        destination_application_security_groups:
+        - sea_web_asg
+        access: Allow
+        priority: 1020
+        direction: Inbound
+      - name: Allow_RDP
+        protocol: Tcp
+        destination_port_range: 3389
+        access: Allow
+        priority: 1040
+        direction: Inbound
+- name: Creating Network Security Group Resources in EUS Region
+  hosts: localhost
+  connection: local
+  tasks:
+  # Creating an Network Security Group
+  - name: Create Network Security Group that allows Web Traffic
+    azure_rm_securitygroup:
+      resource_group: mknilavembu_eus
+      name: eus_nsg
+      rules:
+      - name: Allow_HTTP_S
+        protocol: Tcp
+        destination_port_range:
+          - 80
+          - 443
+        destination_application_security_groups:
+          - eus_web_asg
+        access: Allow
+        priority: 1001
+        direction: Inbound
+      - name: Allow_RDP
+        protocol: Tcp
+        destination_port_range: 3389
+        access: Allow
+        priority: 1040
+        direction: Inbound

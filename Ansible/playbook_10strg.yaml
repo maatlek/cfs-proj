@@ -1,0 +1,32 @@
+- name: Creating Storage Resources in SEA Region
+  hosts: localhost
+  connection: local
+  tasks:
+  # Creating an Storage Account
+  - name: Create a storage Account
+    azure_rm_storageaccount:
+      resource_group: mknilavembu_sea
+      name: 00nilstoragesea
+      type: Standard_ZRS
+  ## Creating a container blob
+  - name: Create a container sales
+    azure_rm_storageblob:
+      resource_group: mknilavembu_sea
+      storage_account_name: 00nilstoragesea
+      container: salessea
+- name: Creating Storage Resources in EUS Region
+  hosts: localhost
+  connection: local
+  tasks:
+  # Creating an Storage Account
+  - name: Create a storage Account
+    azure_rm_storageaccount:
+      resource_group: mknilavembu_eus
+      name: 00nilstorageeus
+      type: Standard_GRS
+  ## Creating a container blob
+  - name: Create a container sales
+    azure_rm_storageblob:
+      resource_group: mknilavembu_eus
+      storage_account_name: 00nilstorageeus
+      container: saleseus

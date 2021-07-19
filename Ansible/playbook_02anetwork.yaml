@@ -1,0 +1,43 @@
+- name: Creating Network in SEA Region
+  hosts: localhost
+  connection: local
+  tasks:
+  # Creating a Virtual Network
+  - name: Create virtual network
+    azure_rm_virtualnetwork:
+      resource_group: mknilavembu_sea
+      name: seavnet
+      address_prefixes: "10.0.0.0/8"
+  # Create Subnets
+  ## For Web
+  - name: Add subnet for web
+    azure_rm_subnet:
+      resource_group: mknilavembu_sea
+      name: sea_web_subnet
+      address_prefix: "10.1.0.0/24"
+      virtual_network: seavnet
+  ## For Jump
+  - name: Add subnet for jump
+    azure_rm_subnet:
+      resource_group: mknilavembu_sea
+      name: sea_jump_subnet
+      address_prefix: "10.2.0.0/24"
+      virtual_network: seavnet
+- name: Creating Network in EUS Region
+  hosts: localhost
+  connection: local
+  tasks:
+  # Creating a Virtual Network
+  - name: Create virtual network
+    azure_rm_virtualnetwork:
+      resource_group: mknilavembu_eus
+      name: eusvnet
+      address_prefixes: "192.168.0.0/16"
+  # Create Subnets
+  ## For Server11
+  - name: Add subnet for server11
+    azure_rm_subnet:
+      resource_group: mknilavembu_eus
+      name: eus_web_subnet
+      address_prefix: "192.168.0.0/24"
+      virtual_network: eusvnet

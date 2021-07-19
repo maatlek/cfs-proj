@@ -1,0 +1,72 @@
+- name: Creating Virtual Machine Resources in SEA Region
+  hosts: localhost
+  connection: local
+  tasks:
+  # Creating a Virtual Machine
+  ## Creating webserver01 vm
+  - name: Create a webserver01 vm
+    azure_rm_virtualmachine:
+      resource_group: mknilavembu_sea
+      name: "webserver01"
+      vm_size: Standard_DS1_v2
+      admin_username: mkadmin
+      admin_password: "CfsPassword@123"
+      network_interfaces: "webserver01-nic"
+      availability_set: sea_avs
+      managed_disk_type: Standard_LRS
+      image:
+        offer: CentOS
+        publisher: OpenLogic
+        sku: '7.1'
+        version: latest
+  ## Creating webserver11 vm
+  - name: Create a webserver11 vm
+    azure_rm_virtualmachine:
+      resource_group: mknilavembu_sea
+      name: "webserver02"
+      vm_size: Standard_DS1_v2
+      admin_username: mkadmin
+      admin_password: "CfsPassword@123"
+      network_interfaces: "webserver02-nic"
+      availability_set: sea_avs
+      managed_disk_type: Standard_LRS
+      image:
+        offer: CentOS
+        publisher: OpenLogic
+        sku: '7.1'
+        version: latest
+  ## Creating jumpserver vm
+  - name: Create a jumpserver vm
+    azure_rm_virtualmachine:
+      resource_group: mknilavembu_sea
+      name: "jumpserver"
+      vm_size: Standard_DS1_v2
+      admin_username: mkadmin
+      admin_password: "CfsPassword@123"
+      network_interfaces: "jumpserver-nic"
+      managed_disk_type: Standard_LRS
+      image:
+        offer: CentOS
+        publisher: OpenLogic
+        sku: '7.1'
+        version: latest
+- name: Creating Virtual Machine Resources in EUS Region
+  hosts: localhost
+  connection: local
+  tasks:
+  # Creating a Virtual Machine
+  ## Creating server11 vm
+  - name: Create a server11 vm
+    azure_rm_virtualmachine:
+      resource_group: mknilavembu_eus
+      name: server11
+      vm_size: Standard_DS1_v2
+      admin_username: mkadmin
+      admin_password: "CfsPassword@123"
+      network_interfaces: "server11-nic"
+      managed_disk_type: Standard_LRS
+      image:
+        offer: CentOS
+        publisher: OpenLogic
+        sku: '7.1'
+        version: latest

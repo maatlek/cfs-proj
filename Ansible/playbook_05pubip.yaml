@@ -1,0 +1,38 @@
+- name: Creating Public IP Resources in SEA Region
+  hosts: localhost
+  connection: local
+  tasks:
+  # Creating a Public IP Address for Jump Server
+  - name: Create public IP address
+    azure_rm_publicipaddress:
+      resource_group: mknilavembu_sea
+      allocation_method: Static
+      name: jump_pubip
+    register: ip1
+  - name: Dump public IP for Jump Server
+    debug:
+      msg: "The public IP for Jump Server is {{ ip1.state.ip_address }}."
+  # Creating a Public IP Address for Load Balancer
+  - name: Create public IP address
+    azure_rm_publicipaddress:
+      resource_group: mknilavembu_sea
+      allocation_method: Static
+      name: lb_pubip
+    register: lb_feip
+  - name: Dump public IP for Load Balancer
+    debug:
+      msg: "The public IP of Load Balancer is {{ lb_feip.state.ip_address }}."
+- name: Creating Public IP Resources in EUS Region
+  hosts: localhost
+  connection: local
+  tasks:
+  # Creating a Public IP Address for Server11
+  - name: Create public IP address
+    azure_rm_publicipaddress:
+      resource_group: mknilavembu_eus
+      allocation_method: Static
+      name: server11_pubip
+    register: ip1
+  - name: Dump public IP for Jump Server
+    debug:
+      msg: "The public IP for Jump Server is {{ ip1.state.ip_address }}."

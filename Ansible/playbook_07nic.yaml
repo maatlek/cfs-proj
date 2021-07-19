@@ -1,0 +1,70 @@
+- name: Creating Network Interface Resources in SEA Region
+  hosts: localhost
+  connection: local
+  tasks:
+  # Creating a Virtual Network Interface
+  ## For WebServer1
+  - name: Create virtual network interface card for Webserver1
+    azure_rm_networkinterface:
+      resource_group: mknilavembu_sea
+      name: "webserver01-nic"
+      virtual_network: seavnet
+      subnet: sea_web_subnet
+      security_group: sea_nsg
+      ip_configurations:
+      - name: lbipconfig_w1
+        application_security_groups:
+        - name: sea_web_asg
+          resource_group: mknilavembu_sea
+        load_balancer_backend_address_pools:
+        - name: lb_bp
+          load_balancer: sea_lb
+  ## For WebServer2
+  - name: Create virtual network interface card for Webserver2
+    azure_rm_networkinterface:
+      resource_group: mknilavembu_sea
+      name: "webserver02-nic"
+      virtual_network: seavnet
+      subnet: sea_web_subnet
+      security_group: sea_nsg
+      ip_configurations:
+      - name: lbipconfig_w2
+        application_security_groups:
+        - name: sea_web_asg
+          resource_group: mknilavembu_sea
+        load_balancer_backend_address_pools:
+        - name: lb_bp
+          load_balancer: sea_lb
+  ## For JumpServer
+  - name: Create virtual network interface card for Jumpserver
+    azure_rm_networkinterface:
+      resource_group: mknilavembu_sea
+      name: "jumpserver-nic"
+      virtual_network: seavnet
+      subnet: sea_jump_subnet
+      public_ip_name: jump_pubip
+      security_group: sea_nsg
+      ip_configurations:
+      - name: lbipconfig_j
+        application_security_groups:
+        - name: sea_jump_asg
+          resource_group: mknilavembu_sea
+- name: Creating Network Interface Resources in EUS Region
+  hosts: localhost
+  connection: local
+  tasks:
+  # Creating a Virtual Network Interface
+  ## For Server11
+  - name: Create virtual network interface card
+    azure_rm_networkinterface:
+      resource_group: mknilavembu_eus
+      name: "server11-nic"
+      virtual_network: eusvnet
+      subnet: eus_web_subnet
+      public_ip_name: server11_pubip
+      security_group: eus_nsg
+      ip_configurations:
+      - name: lbipconfig_s11
+        application_security_groups:
+        - name: eus_web_asg
+          resource_group: mknilavembu_eus

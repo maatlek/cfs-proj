@@ -1,0 +1,28 @@
+- name: Creating Application Security Group Resources in SEA Region
+  hosts: localhost
+  connection: local
+  tasks:
+  # Creating an Application Security Group
+  ## For Web Servers
+  - name: Create application security group for Web Servers
+    azure_rm_applicationsecuritygroup:
+      resource_group: mknilavembu_sea
+      name: sea_web_asg
+      location: australiaeast
+  ## For Jump Servers
+  - name: Create application security group for Jump Servers
+    azure_rm_applicationsecuritygroup:
+      resource_group: mknilavembu_sea
+      name: sea_jump_asg
+      location: australiaeast
+- name: Creating ApplicationSecurity Group Resources in EUS Region
+  hosts: localhost
+  connection: local
+  tasks:
+  # Creating an Application Security Group
+  ## For Web Servers
+  - name: Create application security group for Web Servers
+    azure_rm_applicationsecuritygroup:
+      resource_group: mknilavembu_eus
+      name: eus_web_asg
+      location: canadacentral

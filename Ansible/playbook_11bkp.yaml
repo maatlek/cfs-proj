@@ -1,0 +1,51 @@
+- name: Creating Backup Resources in SEA Region
+  hosts: localhost
+  connection: local
+  tasks:
+  # Creating a Recovery Storage Vault --- NOT WORKING
+  - name: Create Azure Recovery Service vault
+    azure_rm_recoveryservicesvault:
+      resource_group: mknilavembu_sea
+      name: seabkp
+      location: australiaeast
+      state: present
+  ## Create Backup Policy
+  - name: Create VM Backup Policy
+    azure_rm_backvmuppolicy:
+      name: web_bckp_policy
+      vault_name: seabkp
+      resource_group: mknilavembu_sea
+      time: '18:00'
+      weekdays: ['Monday', 'Thursday', 'Friday']
+      weeks: ['First', 'Fourth']
+      months: ['February', 'November']
+      count: 4
+      state: present
+    register: wbkp    
+  ## Enabling Backup for VM
+  ### Webserver01
+  - name: Get VM01 Fact
+    azure_rm_virtualmachine_info:
+      resource_group: mknilavembu_sea
+      name: "webserver01"
+    register: vm1
+  - name: Enabling/Updating protection for the Azure Webserver01
+    azure_rm_backupazurevm:
+      resource_group: mknilavembu_sea
+      recovery_vault_name: seabkp
+      resource_id: "{{ vm1.vms.id }}"
+      backup_policy_id: "{{ wbkp.id }}"
+      state: 'create'
+  ### Webserver02
+  - name: Get VM02 Fact
+    azure_rm_virtualmachine_info:
+      resource_group: mknilavembu_sea
+      name: "webserver02"
+    register: vm2
+  - name: Enabling/Updating protection for the Azure Webserver01
+    azure_rm_backupazurevm:
+      resource_group: mknilavembu_sea
+      recovery_vault_name: seabkp
+      resource_id: "{{ vm2.vms.id }}"
+      backup_policy_id: "{{ wbkp.id }}"
+      state: 'create'

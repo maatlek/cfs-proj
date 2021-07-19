@@ -1,0 +1,18 @@
+- name: Delete a resource group on SEA Region
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: Delete SEA RG
+    azure_rm_resourcegroup:
+      name: mknilavembu_sea
+      force_delete_nonempty: yes
+      state: absent
+- name: Delete a resource group on EUS Region
+  hosts: hostname
+  connection: local
+  tasks:
+  - name: Delete EUS RG
+    azure_rm_resourcegroup:
+      name: mknilavembu_eus
+      force_delete_nonempty: yes
+      state: absent

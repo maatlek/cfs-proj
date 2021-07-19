@@ -1,0 +1,12 @@
+- name: Creating Availability Set Resources in SEA Region
+  hosts: localhost
+  connection: local
+  tasks:
+  # Creating an Availability Set
+  - name: Create an availability set for managed disk vm
+    azure_rm_availabilityset:
+      name: sea_avs
+      resource_group: mknilavembu_sea
+      platform_update_domain_count: 1
+      platform_fault_domain_count: 2
+      sku: Aligned

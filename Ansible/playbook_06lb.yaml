@@ -1,0 +1,31 @@
+- name: Creating Load Balancer Resources in SEA Region
+  hosts: localhost
+  connection: local
+  tasks:
+  # Creating a Load Balancer for Web Server
+  - name: Create load balancer
+    azure_rm_loadbalancer:
+      resource_group: mknilavembu_sea
+      name: sea_lb
+      frontend_ip_configurations:
+      - name: lb_fip
+        public_ip_address: lb_pubip
+      backend_address_pools:
+      - name: lb_bp
+      probes:
+      - name: prob0
+        port: 80
+      load_balancing_rules:
+      - name: lbrbalancingrule0
+        frontend_ip_configuration: lb_fip
+        backend_address_pool: lb_bp
+        frontend_port: 80
+        backend_port: 80
+        probe: prob0
+      - name: lbrbalancingrule1
+        frontend_ip_configuration: lb_fip
+        backend_address_pool: lb_bp
+        frontend_port: 443
+        backend_port: 443
+        probe: prob0
+    register: lb

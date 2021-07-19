@@ -1,0 +1,30 @@
+- name: Creating Network Peering from EUS Region 
+  hosts: localhost
+  connection: local
+  tasks:  
+    # Creating a Peering
+  - name: Create virtual network peering
+    azure_rm_virtualnetworkpeering:
+      resource_group: mknilavembu_eus
+      virtual_network: eusvnet
+      name: peer_eus_sea
+      remote_virtual_network:
+        resource_group: mknilavembu_sea
+        name: seavnet
+      allow_virtual_network_access: true
+      allow_forwarded_traffic: true
+- name: Creating Network Peering from SEA Region 
+  hosts: localhost
+  connection: local
+  tasks:  
+    # Creating a Peering
+  - name: Create reverse virtual network peering
+    azure_rm_virtualnetworkpeering:
+      resource_group: mknilavembu_sea
+      virtual_network: seavnet
+      name: peer_sea_eus
+      remote_virtual_network:
+        resource_group: mknilavembu_eus
+        name: eusvnet
+      allow_virtual_network_access: true
+      allow_forwarded_traffic: true
