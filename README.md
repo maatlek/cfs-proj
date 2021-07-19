@@ -47,8 +47,8 @@ Creating a Project for the case study as discussed/presented on the presentation
 		- [Recovery Service Vault & Backup Creation](Ansible/playbook_11bkp.yaml)
 		- [Resource Deletion](Ansible/playbook_12del.yaml)
 - ARM Templates for the regions
-	- [template](ARM%20Template/sea_rg/template.json)
-	- [template](ARM%20Template/eus_rg/template.json)
+	- [SEA RG Template](ARM%20Template/sea_rg/template.json)
+	- [EUS RG Template](ARM%20Template/eus_rg/template.json)
 
 
 # Objective
