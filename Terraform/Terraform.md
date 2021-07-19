@@ -113,3 +113,6 @@ User_for_VM_Contribution = "vm_admin1"
 eus_sas_url_query_string = <sensitive>
 sea_sas_url_query_string = <sensitive>
 ```
+
+# Final
+Deletion of all the resources is done by `terraform destroy --force`

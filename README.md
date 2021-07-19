@@ -2,8 +2,8 @@
 #YAML
 name: Mahmood Athil
 id: 666078
-Company: Tech Mahindra
-Batch: COE1A
+org: Tech Mahindra
+batch: COE1A
 project: Case Study
 ---
 
@@ -31,6 +31,21 @@ Creating a Project for the case study as discussed/presented on the presentation
 		- [Creting Resources for EUS Region](./Terraform/main_eus.tf)
 		- [Creating AD Identity](./Terraform/ad_identity.tf)
 		- [Creting Output](./Terraform/output.tf)
+- Case Study using [Ansible](../Ansible/Ansible.md)
+	- Ansible Scripts - All the YAML scripts can be listed as follows:
+		- [Resource Group Creation](Ansible/playbook_01rg.yaml)
+		- [Virtual Network Creation](Ansible/playbook_02anetwork.yaml)
+		- [Network Peering Creation](Ansible/playbook_02bpeer.yaml)
+		- [Application Security Group Creation](Ansible/playbook_03asg.yaml)
+		- [Network Security Group Creation](Ansible/playbook_04nsg.yaml)
+		- [Public IP Creation](Ansible/playbook_05pubip.yaml)
+		- [Load Balancer Creation](Ansible/playbook_06lb.yaml)
+		- [Network Interface Creation](Ansible/playbook_07nic.yaml)
+		- [Availability Set Creation](Ansible/playbook_08avs.yaml)
+		- [Virtual Machine Creation](Ansible/playbook_09vm.yaml)
+		- [Storage Creation](Ansible/playbook_10strg.yaml)
+		- [Recovery Service Vault & Backup Creation](Ansible/playbook_11bkp.yaml)
+		- [Resource Deletion](Ansible/playbook_12del.yaml)
 - ARM Templates for the regions
 	- [template](ARM%20Template/sea_rg/template.json)
 	- [template](ARM%20Template/eus_rg/template.json)
@@ -42,5 +57,5 @@ Creating a Project for the case study as discussed/presented on the presentation
 - [x] Using PowerShell + Azure cmdlets
 - [Basic Use Cases] Using Azure CLI (On-Progess)
 - [x] Using Terraform for Provisioning
-- [Basic Use Cases] Using Ansible (On-Progress)
+- [x] Using Ansible
 - [Mastery Acquired] Patience
