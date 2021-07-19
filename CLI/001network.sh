@@ -79,3 +79,13 @@ az network vnet subnet create -g mknilavembu_rgeus \
     --vnet-name seavnet -n sea_web_sub \
     --address-prefixes 192.168.0.0/24 \
     --network-security-group eus_nsg
+
+# Virtual Network Peering
+
+az network vnet peering create -g mknilavembu_rgsea \
+    -n peer_eussea --vnet-name seavnet \
+    --remote-vnet eusvnet --allow-vnet-access
+
+az network vnet peering create -g mknilavembu_rgeus \
+    -n peer_seaeus --vnet-name eusvnet \
+    --remote-vnet seavnet --allow-vnet-access
