@@ -1,8 +1,10 @@
 - name: Creating Backup Resources in SEA Region
   hosts: localhost
   connection: local
+  collections:
+  - azure.azcollection
   tasks:
-  # Creating a Recovery Storage Vault --- NOT WORKING
+  # Creating a Recovery Storage Vault
   - name: Create Azure Recovery Service vault
     azure_rm_recoveryservicesvault:
       resource_group: mknilavembu_sea
@@ -10,18 +12,18 @@
       location: australiaeast
       state: present
   ## Create Backup Policy
-  - name: Create VM Backup Policy
-    azure_rm_backvmuppolicy:
-      name: web_bckp_policy
-      vault_name: seabkp
-      resource_group: mknilavembu_sea
-      time: '18:00'
-      weekdays: ['Monday', 'Thursday', 'Friday']
-      weeks: ['First', 'Fourth']
-      months: ['February', 'November']
-      count: 4
+  - name: Create a daily VM backup policy
+    azure_rm_backuppolicy:
+      vault_name: Vault_Name
+      name: Policy_Name
+      resource_group: Resource_Group_Name
       state: present
-    register: wbkp    
+      backup_management_type: "AzureIaasVM"
+      schedule_run_frequency: "Daily"
+      instant_recovery_snapshot_retention: 2
+      daily_retention_count: 12
+      time_zone: "Pacific Standard Time"
+      schedule_run_time: 14  
   ## Enabling Backup for VM
   ### Webserver01
   - name: Get VM01 Fact

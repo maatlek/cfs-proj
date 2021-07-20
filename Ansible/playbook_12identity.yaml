@@ -1,0 +1,36 @@
+- name: Create Azure VM Admin
+  hosts: localhost
+  connection: local
+  collections:
+  - azure.azcollection
+  tasks:
+  # Getting the Subscription Facts - Not Executing
+  - name: subscription
+    azure_rm_subscription_info:
+      name: "Free Trial"
+    register: sub_scope
+  - name: Get details
+    debug:
+      msg: "{{ sub_scope.subscriptions.tenantid }}"
+  # Creating a VM Admin User
+  - name: Create a VM Admin User
+    azure_rm_aduser:
+      user_principal_name: vm_admin
+      tenant: "{{ sub_scope.subscriptions.tenantid }}"
+      state: "present"
+      account_enabled: "True"
+      password_profile: "Password@123"
+      user_type: "Member"
+    register: vmadmin
+  # Getting the Role Definition of Virtual Machine contributor
+  - name: Get Role Definition by name
+    azure_rm_roledefinition_info:
+      scope: "{{ sub_scope.subscriptions.fqid }}"
+      role_name: Virtual Machine Contributor
+    register: vmc_role
+  # Adding users into the role
+  - name: Create a role assignment
+    azure_rm_roleassignment:
+      scope: "{{ sub_scope.subscriptions.fqid }}"
+      assignee_object_id: "{{ vmadmin.object_id }}"
+      role_definition_id: "{{ vmc_role.roledefinitions.id }}"

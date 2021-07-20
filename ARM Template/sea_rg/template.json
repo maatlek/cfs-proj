@@ -290,6 +290,44 @@
             "properties": {}
         },
         {
+            "type": "Microsoft.Network/loadBalancers/inboundNatRules",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('loadBalancers_sea_lb_name'), '/nat-RDP')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_sea_lb_name'))]"
+            ],
+            "properties": {
+                "frontendIPConfiguration": {
+                    "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_sea_lb_name')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
+                },
+                "frontendPort": 420,
+                "backendPort": 3389,
+                "enableFloatingIP": false,
+                "idleTimeoutInMinutes": 4,
+                "protocol": "Tcp",
+                "enableTcpReset": false
+            }
+        },
+        {
+            "type": "Microsoft.Network/loadBalancers/inboundNatRules",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(parameters('loadBalancers_sea_lb_name'), '/nat-RDP2')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_sea_lb_name'))]"
+            ],
+            "properties": {
+                "frontendIPConfiguration": {
+                    "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_sea_lb_name')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
+                },
+                "frontendPort": 421,
+                "backendPort": 3389,
+                "enableFloatingIP": false,
+                "idleTimeoutInMinutes": 4,
+                "protocol": "Tcp",
+                "enableTcpReset": false
+            }
+        },
+        {
             "type": "Microsoft.Network/networkSecurityGroups/securityRules",
             "apiVersion": "2020-11-01",
             "name": "[concat(parameters('networkSecurityGroups_sea_nsg_name'), '/Allow_RDP')]",
@@ -965,7 +1003,36 @@
                         }
                     }
                 ],
-                "inboundNatRules": [],
+                "inboundNatRules": [
+                    {
+                        "name": "nat-RDP",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_sea_lb_name')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
+                            },
+                            "frontendPort": 420,
+                            "backendPort": 3389,
+                            "enableFloatingIP": false,
+                            "idleTimeoutInMinutes": 4,
+                            "protocol": "Tcp",
+                            "enableTcpReset": false
+                        }
+                    },
+                    {
+                        "name": "nat-RDP2",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancers_sea_lb_name')), '/frontendIPConfigurations/LoadBalancerFrontEnd')]"
+                            },
+                            "frontendPort": 421,
+                            "backendPort": 3389,
+                            "enableFloatingIP": false,
+                            "idleTimeoutInMinutes": 4,
+                            "protocol": "Tcp",
+                            "enableTcpReset": false
+                        }
+                    }
+                ],
                 "inboundNatPools": []
             }
         },
@@ -1364,6 +1431,7 @@
                 "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_sea_vnet_name'), 'sea-web-subnet')]",
                 "[resourceId('Microsoft.Network/applicationSecurityGroups', parameters('applicationSecurityGroups_sea_web_asg_name'))]",
                 "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_sea_lb_name'), concat(parameters('loadBalancers_sea_lb_name'), 'bp'))]",
+                "[resourceId('Microsoft.Network/loadBalancers/inboundNatRules', parameters('loadBalancers_sea_lb_name'), 'nat-RDP2')]",
                 "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]"
             ],
             "tags": {
@@ -1392,6 +1460,11 @@
                                 {
                                     "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_sea_lb_name'), concat(parameters('loadBalancers_sea_lb_name'), 'bp'))]"
                                 }
+                            ],
+                            "loadBalancerInboundNatRules": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/loadBalancers/inboundNatRules', parameters('loadBalancers_sea_lb_name'), 'nat-RDP2')]"
+                                }
                             ]
                         }
                     }
@@ -1415,6 +1488,7 @@
                 "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_sea_vnet_name'), 'sea-web-subnet')]",
                 "[resourceId('Microsoft.Network/applicationSecurityGroups', parameters('applicationSecurityGroups_sea_web_asg_name'))]",
                 "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_sea_lb_name'), concat(parameters('loadBalancers_sea_lb_name'), 'bp'))]",
+                "[resourceId('Microsoft.Network/loadBalancers/inboundNatRules', parameters('loadBalancers_sea_lb_name'), 'nat-RDP')]",
                 "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_sea_nsg_name'))]"
             ],
             "tags": {
@@ -1442,6 +1516,11 @@
                             "loadBalancerBackendAddressPools": [
                                 {
                                     "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('loadBalancers_sea_lb_name'), concat(parameters('loadBalancers_sea_lb_name'), 'bp'))]"
+                                }
+                            ],
+                            "loadBalancerInboundNatRules": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/loadBalancers/inboundNatRules', parameters('loadBalancers_sea_lb_name'), 'nat-RDP')]"
                                 }
                             ]
                         }

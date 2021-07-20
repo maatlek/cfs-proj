@@ -12,7 +12,7 @@ Creating a Project for the case study as discussed/presented on the presentation
 
 # Navigation
 - **Infrastructure Plan with a [Network Diagram](./Case_Study%20Implementation.pdf)**
-- **Case Study on [Azure Portal](./Portal/Azure%20Portal.md) **
+- **Case Study on [Azure Portal](./Portal/Azure%20Portal.md)**
 - **Case Study using [Azure PowerShell](./PowerShell/Azure%20PowerShell.md)**
 	- PowerShell Scripts:
 		- [Pre-Requisite for Working](./PowerShell/000prerequisite.ps1)
@@ -45,18 +45,63 @@ Creating a Project for the case study as discussed/presented on the presentation
 		- [Virtual Machine Creation](Ansible/playbook_09vm.yaml)
 		- [Storage Creation](Ansible/playbook_10strg.yaml)
 		- [Recovery Service Vault & Backup Creation](Ansible/playbook_11bkp.yaml)
-		- [Resource Deletion](Ansible/playbook_12del.yaml)
+		- [Identity - Not Working](Ansible/playbook_12identity.yaml)
+		- [Resource Deletion](Ansible/playbook_13del.yaml)
 - **Case Study Using [Azure CLI](CLI/Azure%20CLI.md)**
+	- CLI Scripts:
+		- Pre-Requisites & Resource Group[000prerequisite](CLI/000prerequisite.sh)
+		- [Network Resources](CLI/001network.sh)
+		- [Load Balancer](CLI/002loadbalancer.sh)
+		- [Virtual Machine](CLI/003virtualmachine.sh)
+		- [Backup Components](CLI/004bkp.sh)
+		- [Storage Accounts & Components](CLI/005strg.sh)
+		- [Identity & Role Assignments](CLI/006identity.sh)
 - **ARM Templates for the regions**
 	- [SEA RG Template](ARM%20Template/sea_rg/template.json)
 	- [EUS RG Template](ARM%20Template/eus_rg/template.json)
+- Other Previous Tasks
+	- [All Initial Assessment](Previous%20Task/Assessment/)
+	- Misc Tasks
+		- [Function to Add VMs with Data Disks](Previous%20Task/Tasks/New-AzVMwithDisk.ps1)
+		- [Random Network Creation](Previous%20Task/Tasks/NetworkCreation.ps1) 
+
+# Resource Created
+|Resources | Nilavembu_SEA | Nilavembu_EUS |
+|:--|:--:|:--:|
+|**Virtual Network**|sea-vnet|eus-vnet |
+|**Subnet**|sea-web-subnet|eus-web-subnet|
+||sea-jump-subnet||
+|**ASGs**|sea-web-asg|eus-web-asg|
+||sea-jump-asg||
+|**NSGs**|sea-nsg|eus-nsg|
+|NSG Rule|Allow_HTTP_S|Allow_HTTP_S|
+||Allow_RDP|Allow_RDP|
+||Allow_FTP||
+|**Load Balancer**|sea-lb||
+|Frontend IP|LoadBalancerFrontEnd||
+|Backend Pool|sea-lbbp||
+|Health Probe|webserver-health||
+||webserver-health-s||
+|Inbound NAT Rule|nat-RDP:420:3389||
+||nat-RDP2:421:3389||
+|**Virtual Machines**|webserver1|server11|
+||webserver11||
+||jumpserver||
+|**Backup**|sea-web-bckup||
+|**Storage Account**|nilsestorage|nileustorage|
+
+Global:
+- User Creation:
+	- vmadmin[scope:subscription]
+	- backupadmin[scope:Nilavembu_EUS]
+- Traffic Manager Profile
 
 
 # Objective
 - [x] Knowledge on Basic Cloud Services from Azure
 - [x] Navigating Azure Portal
 - [x] Using PowerShell + Azure cmdlets
-- [Basic Use Cases] Using Azure CLI (On-Progess)
+- [x] Using Azure CLI
 - [x] Using Terraform for Provisioning
 - [x] Using Ansible
 - [Mastery Acquired] Patience

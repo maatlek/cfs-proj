@@ -15,16 +15,16 @@ Once the resource group is created, other necessary resources are created as fol
 	- Common Network Security Group (`sea-app-nsg`)
 - Availaibility Set
 - Virtual Machine
-	- 2 Web Servers (`webserver1` & `webserver2`)
+	- 2 Web Servers (`webserver1` & `webserver11`)
 		- Under subnet (address space = 10.1.0.0/24)
 		- Network Interface
 		- Allowed connectivity from the Load Balancer from the Internet 
-		- Backup of Web Servers in a Recovery Service Vault (`webserver-backup`)
+		- Backup of Web Servers in a Recovery Service Vault (`sea-bckp`)
 	- Jump Host Server (`jumpserver`)
 		- Under subnet (address space = 10.2.0.0/24)
 		- Network Interface
 		- Public IP Address, to allow connections over the internet (with FQDN)
-- Load Balancer `sea-LB`
+- Load Balancer `sea-lb`
 	- To Allow Connections from the Public Internet to the Virtual Machines created.
 	- With Client Affinity
 
@@ -74,7 +74,7 @@ As a part of case study 2 webservers, as follows:
 ![](./images/Pasted%20image%2020210716000610.png)
 
 ##### Alerts
-Alerts are generated when the CPU PErcentage is above 80%. Below configurations are done. They are created for both the web servers.
+Alerts are generated when the CPU Percentage is above 80%. Below configurations are done. They are created for both the web servers.
 
 Below Scope and Conditions are selected:
 
@@ -142,6 +142,14 @@ After addition of load balancer, we IP changes to the Front End IP of the Load B
 
 ![](./images/Pasted%20image%2020210716214117.png)
 
+Creating an Inbound NAT Rule:
+
+![](images/Pasted%20image%2020210720203414.png)
+
+Thus services of RDP can be routed through the port 421/421 for the resprective webservers can be connected through RDP as below:
+
+![](images/Pasted%20image%2020210720205614.png)
+
 
 ## EUS Resource Group
 The resources for the EUS Resource Group is created as follows, as same as the above resource group created:
@@ -152,8 +160,8 @@ The resources for the EUS Resource Group is created as follows, as same as the a
 ![](./images/Pasted%20image%2020210714165626.png)
 
 Once the Resource Group is created the below is created:
-- Virtual Network (`eus-vnet` = 10.3.0.0/16)
-	- Subnets under the Virtual Network (`eus-subnet` = 10.3.0.0/24)
+- Virtual Network (`eus-vnet` = 192.168.0.0/16)
+	- Subnets under the Virtual Network (`eus-subnet` = 192.168.0.0/24)
 	- with peering to Southeast Asia Resource Group
 	- Common Network Security Group (`eus-app-nsg`)
 - Virtual Machine (`server11`)
@@ -181,7 +189,7 @@ A Virtual Machine is created as with the following settings.
 ![](./images/Pasted%20image%2020210716214511.png)
 
 #### Network Interface
-The Virtual Machine is associated with the Internal IP configured as - 10.3.0.4
+The Virtual Machine is associated with the Internal IP configured as with range : `192.168.0.0/24`
 
 And attaching the Network Security Group `eus-nsg` to allow only connections within the Virtual Network `eus-vnet` over RDP and not any other apart from it. 
 
