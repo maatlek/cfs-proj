@@ -8,7 +8,48 @@ project: Case Study
 ---
 
 # Introduction
-Creating a Project for the case study as discussed/presented on the presentation [Case Study pptx](./AzureCase_TM_coe_v2.pptx)
+Creating a Project for the case study as discussed/presented on the presentation [Case Study pptx](./AzureCase_TM_coe_v2.pptx). Please Follow the Navigation to explore the files.
+
+# Resource Created
+|Resources | Nilavembu_SEA | Nilavembu_EUS |
+|:--|:--:|:--:|
+|**Virtual Network**|sea-vnet|eus-vnet |
+|**Subnet**|sea-web-subnet|eus-web-subnet|
+||sea-jump-subnet||
+|**ASGs**|sea-web-asg|eus-web-asg|
+||sea-jump-asg||
+|**NSGs**|sea-nsg|eus-nsg|
+|NSG Rule|Allow_HTTP_S|Allow_HTTP_S|
+||Allow_RDP|Allow_RDP|
+||Allow_FTP||
+|**Load Balancer**|sea-lb||
+|Frontend IP|LoadBalancerFrontEnd||
+|Backend Pool|sea-lbbp||
+|Health Probe|webserver-health||
+||webserver-health-s||
+|Inbound NAT Rule|nat-RDP:420:3389||
+||nat-RDP2:421:3389||
+|**Virtual Machines**|webserver1|server11|
+||webserver11||
+||jumpserver||
+|**Backup**|sea-web-bckup||
+|**Storage Account**|nilsestorage|nileustorage|
+
+Global:
+- User Creation:
+	- vmadmin[scope:subscription]
+	- backupadmin[scope:Nilavembu_EUS]
+- Traffic Manager Profile
+
+
+# Objective
+- [x] Knowledge on Basic Cloud Services from Azure
+- [x] Navigating Azure Portal
+- [x] Using PowerShell + Azure cmdlets
+- [x] Using Azure CLI
+- [x] Using Terraform for Provisioning
+- [x] Using Ansible
+- [Mastery Acquired] Patience
 
 # Navigation
 - **Infrastructure Plan with a [Network Diagram](./Case_Study%20Implementation.pdf)**
@@ -64,44 +105,3 @@ Creating a Project for the case study as discussed/presented on the presentation
 	- Misc Tasks
 		- [Function to Add VMs with Data Disks](Previous%20Task/Tasks/New-AzVMwithDisk.ps1)
 		- [Random Network Creation](Previous%20Task/Tasks/NetworkCreation.ps1) 
-
-# Resource Created
-|Resources | Nilavembu_SEA | Nilavembu_EUS |
-|:--|:--:|:--:|
-|**Virtual Network**|sea-vnet|eus-vnet |
-|**Subnet**|sea-web-subnet|eus-web-subnet|
-||sea-jump-subnet||
-|**ASGs**|sea-web-asg|eus-web-asg|
-||sea-jump-asg||
-|**NSGs**|sea-nsg|eus-nsg|
-|NSG Rule|Allow_HTTP_S|Allow_HTTP_S|
-||Allow_RDP|Allow_RDP|
-||Allow_FTP||
-|**Load Balancer**|sea-lb||
-|Frontend IP|LoadBalancerFrontEnd||
-|Backend Pool|sea-lbbp||
-|Health Probe|webserver-health||
-||webserver-health-s||
-|Inbound NAT Rule|nat-RDP:420:3389||
-||nat-RDP2:421:3389||
-|**Virtual Machines**|webserver1|server11|
-||webserver11||
-||jumpserver||
-|**Backup**|sea-web-bckup||
-|**Storage Account**|nilsestorage|nileustorage|
-
-Global:
-- User Creation:
-	- vmadmin[scope:subscription]
-	- backupadmin[scope:Nilavembu_EUS]
-- Traffic Manager Profile
-
-
-# Objective
-- [x] Knowledge on Basic Cloud Services from Azure
-- [x] Navigating Azure Portal
-- [x] Using PowerShell + Azure cmdlets
-- [x] Using Azure CLI
-- [x] Using Terraform for Provisioning
-- [x] Using Ansible
-- [Mastery Acquired] Patience
