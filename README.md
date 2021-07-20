@@ -90,7 +90,7 @@ Global:
 		- [Resource Deletion](Ansible/playbook_13del.yaml)
 - **Case Study Using [Azure CLI](CLI/Azure%20CLI.md)**
 	- CLI Scripts:
-		- Pre-Requisites & Resource Group[000prerequisite](CLI/000prerequisite.sh)
+		- [Pre-Requisites & Resource Group](CLI/000prerequisite.sh)
 		- [Network Resources](CLI/001network.sh)
 		- [Load Balancer](CLI/002loadbalancer.sh)
 		- [Virtual Machine](CLI/003virtualmachine.sh)
