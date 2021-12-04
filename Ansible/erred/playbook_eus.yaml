@@ -1,0 +1,113 @@
+- name: Creating Resources in EUS Region
+  hosts: localhost
+  connection: local
+  vars_files:
+    - "./vars/vars_eus.yaml"
+  tasks:
+  # Creating a Resource Group
+  - name: Create resource group
+    azure_rm_resourcegroup:
+      name: mknilavembu_eus
+      location: canadacentral
+      tags:
+        business: nilavembu
+        region: eastus
+      register: rg
+  - name: Provide RG Details
+    debug:
+      msg: "The Resource Group {{ rg.state.name }} in the location {{ rg.state.location}}."
+  # Creating a Virtual Network
+  - name: Create virtual network
+    azure_rm_virtualnetwork:
+      resource_group: mknilavembu_eus
+      name: eusvnet
+      address_prefixes: "192.168.0.0/16"
+  # Create Subnets
+  ## For Server11
+  - name: Add subnet for server11
+    azure_rm_subnet:
+      resource_group: mknilavembu_eus
+      name: eus_web_subnet
+      address_prefix: "192.168.0.0/24"
+      virtual_network: eusvnet
+  # Creating an Application Security Group
+  ## For Web Servers
+  - name: Create application security group for Web Servers
+    azure_rm_applicationsecuritygroup:
+      resource_group: mknilavembu_eus
+      name: eus_web_asg
+      location: canadacentral
+  # Creating an Network Security Group
+  - name: Create Network Security Group that allows Web Traffic
+    azure_rm_securitygroup:
+      resource_group: mknilavembu_eus
+      name: eus_nsg
+      rules:
+      - name: Allow_HTTP_S
+        protocol: Tcp
+        destination_port_range:
+          - 80
+          - 443
+        destination_application_security_groups:
+          - eus_web_asg
+        access: Allow
+        priority: 1001
+        direction: Inbound
+      - name: Allow_RDP
+        protocol: Tcp
+        destination_port_range: 3389
+        access: Allow
+        priority: 1040
+        direction: Inbound
+  # Creating a Public IP Address for Server11
+  - name: Create public IP address
+    azure_rm_publicipaddress:
+      resource_group: mknilavembu_eus
+      allocation_method: Static
+      name: server11_pubip
+    register: ip1
+  - name: Dump public IP for Jump Server
+    debug:
+      msg: "The public IP for Jump Server is {{ ip1.state.ip_address }}."
+  # Creating a Virtual Network Interface
+  ## For Server11
+  - name: Create virtual network interface card
+    azure_rm_networkinterface:
+      resource_group: mknilavembu_eus
+      name: "server11-nic"
+      virtual_network: eusvnet
+      subnet: eus_web_subnet
+      public_ip_name: server11_pubip
+      security_group: eus_nsg
+      ip_configurations:
+      - name: lbipconfig_s11
+        application_security_groups:
+        - name: eus_web_asg
+          resource_group: mknilavembu_eus
+  # Creating a Virtual Machine
+  ## Creating server11 vm
+  - name: Create a server11 vm
+    azure_rm_virtualmachine:
+      resource_group: mknilavembu_eus
+      name: server11
+      vm_size: Standard_DS1_v2
+      admin_username: mkadmin
+      admin_password: "CfsPassword@123"
+      network_interfaces: "server11-nic"
+      image:
+        offer: WindowsServer
+        publisher: MicrosoftWindowsServer
+        sku: '2016-Datacenter'
+        version: latest
+  # Creating an Storage Account
+  - name: Create a storage Account
+    azure_rm_storageaccount:
+      resource_group: mknilavembu_eus
+      name: 00nilstorage_eus
+      type: Standard_GRS
+  ## Creating a container blob
+  - name: Create a container sales
+    azure_rm_storageblob:
+    resource_group: mknilavembu_eus
+    storage_account_name: 00nilstorage_eus
+    container: sales_eus

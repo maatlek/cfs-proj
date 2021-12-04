@@ -1,0 +1,17 @@
+rg: mknilavembu_eus
+location: canadacentral
+vnet: eus_vnet
+subnet:
+  - eus_web_subnet
+nsg: eus_nsg
+asg:
+  - eus_web_asg
+peer: peereus_sea
+pubip: 
+  - s11_eus_pubip
+vm:
+  - server11
+credu: mkadmin
+credp: Password@123
+strg: 00nilstorage_eus
+

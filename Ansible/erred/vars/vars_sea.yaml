@@ -1,0 +1,27 @@
+rg: mknilavembu_sea
+location: australiaeast
+vnet: sea_vnet
+subnet:
+  - sea_web_subnet
+  - sea_jump_subnet
+nsg: sea_nsg
+asg:
+  - sea_web_asg
+  - sea_jump_asg
+peer: peersea_eus
+avs: sea_avs
+pubip: 
+  - jump_sea_pubip
+  - lb_sea_pubip  
+vm:
+  - webserver01
+  - webserver02
+  - jumpserver
+lb: sea_lb
+lbfeip: lb_fe
+lbbep: lb_be
+bkp: sea_web_bckp
+credu: mkadmin
+credp: Password@123
+strg: 00nilstorage_sea
+
