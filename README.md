@@ -8,11 +8,67 @@ project: Case Study
 ---
 
 # Introduction
-Creating a Project for the case study as discussed/presented on the presentation [Case Study pptx](./AzureCase_TM_coe_v2.pptx). Please Follow the Navigation to explore the files.
+
+Creating a Project for the case study as discussed/presented on the presentation [Case Study pptx](./AzureCase_TM_coe_v2.pptx). Please Follow the [Navigation](#^ea1f69) to explore the files.
+
+# Objective
+
+- [x] Knowledge on Basic Cloud Services from Azure
+- [x] Navigating Azure Portal
+- [x] Using PowerShell + Azure cmdlets
+- [x] Using Azure CLI
+- [x] Using Terraform for Provisioning
+- [x] Using Ansible
+- [Mastery Acquired] Patience
+
+# Resource Created
+
+Resources are created for each Resource Group representing different geography. The final Infrastructure Diagram is represented in [Network Diagram](./Case_Study%20Implementation.pdf)
+
+Below are the name of the resources for each resource group :
+
+| Resources            |    Nilavembu_SEA     | Nilavembu_EUS  |
+|:-------------------- |:--------------------:|:--------------:|
+| **Virtual Network**  |       sea-vnet       |    eus-vnet    |
+| **Subnet**           |    sea-web-subnet    | eus-web-subnet |
+|                      |   sea-jump-subnet    |                |
+| **ASGs**             |     sea-web-asg      |  eus-web-asg   |
+|                      |     sea-jump-asg     |                |
+| **NSGs**             |       sea-nsg        |    eus-nsg     |
+| NSG Rule             |     Allow_HTTP_S     |  Allow_HTTP_S  |
+|                      |      Allow_RDP       |   Allow_RDP    |
+|                      |      Allow_FTP       |                |
+| **Load Balancer**    |        sea-lb        |                |
+| Frontend IP          | LoadBalancerFrontEnd |                |
+| Backend Pool         |       sea-lbbp       |                |
+| Health Probe         |   webserver-health   |                |
+|                      |  webserver-health-s  |                |
+| Inbound NAT Rule     |   nat-RDP:420:3389   |                |
+|                      |  nat-RDP2:421:3389   |                |
+| **Virtual Machines** |      webserver1      |    server11    |
+|                      |     webserver11      |                |
+|                      |      jumpserver      |                |
+| **Backup**           |    sea-web-bckup     |                |
+| **Storage Account**  |     nilsestorage     |  nileustorage  |
+
+
+SEA Region: ![SEA Region](SEA%20Region.png)
+
+EUS Region: ![](EUS%20Region.png)
+
+**Global**:
+- User Creation:
+	- User 1: vmadmin (scope level : subscription)
+	- User 2: backupadmin (scope level : Nilavembu_EUS)
+	- ![](Tenant%20Users.png)
+- Traffic Manager Profile
+	- ![](Traffic%20Manager.png)
 
 
 # Navigation
-- **Infrastructure Plan with a [Network Diagram](./Case_Study%20Implementation.pdf)**
+
+^ea1f69
+
 - **Case Study on [Azure Portal](./Portal/Azure%20Portal.md)**
 - **Case Study using [Azure PowerShell](./PowerShell/Azure%20PowerShell.md)**
 	- PowerShell Scripts:
@@ -63,47 +119,8 @@ Creating a Project for the case study as discussed/presented on the presentation
 - Other Previous Tasks
 	- [All Initial Assessment](Previous%20Task/Assessment/)
 	- Misc Tasks
-		- [Function to Add VMs with Data Disks](Previous%20Task/Tasks/New-AzVMwithDisk.ps1)
-		- [Random Network Creation](Previous%20Task/Tasks/NetworkCreation.ps1) 
+		- [Function to Add VMs with Data Disks](Previous%20Task/Regular%20Tasks/New-AzVMwithDisk.ps1)
+		- [Random Network Creation](Previous%20Task/Regular%20Tasks/NetworkCreation.ps1) 
 
 
-# Resource Created
-|Resources | Nilavembu_SEA | Nilavembu_EUS |
-|:--|:--:|:--:|
-|**Virtual Network**|sea-vnet|eus-vnet |
-|**Subnet**|sea-web-subnet|eus-web-subnet|
-||sea-jump-subnet||
-|**ASGs**|sea-web-asg|eus-web-asg|
-||sea-jump-asg||
-|**NSGs**|sea-nsg|eus-nsg|
-|NSG Rule|Allow_HTTP_S|Allow_HTTP_S|
-||Allow_RDP|Allow_RDP|
-||Allow_FTP||
-|**Load Balancer**|sea-lb||
-|Frontend IP|LoadBalancerFrontEnd||
-|Backend Pool|sea-lbbp||
-|Health Probe|webserver-health||
-||webserver-health-s||
-|Inbound NAT Rule|nat-RDP:420:3389||
-||nat-RDP2:421:3389||
-|**Virtual Machines**|webserver1|server11|
-||webserver11||
-||jumpserver||
-|**Backup**|sea-web-bckup||
-|**Storage Account**|nilsestorage|nileustorage|
 
-Global:
-- User Creation:
-	- vmadmin[scope:subscription]
-	- backupadmin[scope:Nilavembu_EUS]
-- Traffic Manager Profile
-
-
-# Objective
-- [x] Knowledge on Basic Cloud Services from Azure
-- [x] Navigating Azure Portal
-- [x] Using PowerShell + Azure cmdlets
-- [x] Using Azure CLI
-- [x] Using Terraform for Provisioning
-- [x] Using Ansible
-- [Mastery Acquired] Patience
